@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Portfolio — MUSU STUDIO</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@300;400;500;600;700&family=Barlow:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --blue: #1E7FBE;
+    --blue-light: #4FB3F0;
+    --blue-dim: #0D4D75;
+    --blue-glow: rgba(30,127,190,0.18);
+    --black: #03030a;
+    --dark: #07070f;
+    --dark2: #0b0b18;
+    --dark3: #111125;
+    --white: #eaf2fb;
+    --muted: #6a7a8d;
+    --accent: #00d4ff;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--black);
+    color: var(--white);
+    font-family: 'Barlow', sans-serif;
+    overflow-x: hidden;
+    cursor: none;
+  }
+
+  /* CURSOR */
+  .cursor {
+    position: fixed; width: 8px; height: 8px;
+    background: var(--accent); border-radius: 50%;
+    pointer-events: none; z-index: 9999;
+    transform: translate(-50%,-50%);
+    transition: width 0.25s, height 0.25s;
+    mix-blend-mode: screen;
+  }
+  .cursor-ring {
+    position: fixed; width: 40px; height: 40px;
+    border: 1px solid rgba(0,212,255,0.4); border-radius: 50%;
+    pointer-events: none; z-index: 9998;
+    transform: translate(-50%,-50%); transition: all 0.15s ease;
+  }
+
+  /* NOISE */
+  body::before {
+    content:''; position:fixed; inset:0; pointer-events:none; z-index:9990; opacity:0.03;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  /* SCANLINE */
+  .scanline {
+    position: fixed; left:0; right:0; height:1px;
+    background: linear-gradient(to right, transparent, rgba(0,212,255,0.2), transparent);
+    pointer-events: none; z-index: 9995;
+    animation: scan 12s linear infinite;
+  }
+  @keyframes scan {
+    0% { top: -2px; opacity: 0; } 3% { opacity: 1; }
+    97% { opacity: 0.1; } 100% { top: 100vh; opacity: 0; }
+  }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 20px 64px;
+    background: linear-gradient(to bottom, rgba(3,3,10,0.97) 0%, transparent 100%);
+  }
+  nav.scrolled { background: rgba(3,3,10,0.98); }
+
+  .nav-logo {
+    display: flex; align-items: center; gap: 14px;
+    font-family: 'Bebas Neue', sans-serif; font-size: 1.6rem;
+    letter-spacing: 0.2em; color: var(--white); text-decoration: none;
+  }
+  .nav-logo-img { width: 38px; height: 38px; border-radius: 50%; object-fit: cover; border: 1px solid rgba(0,212,255,0.25); }
+  .nav-logo .accent { color: var(--accent); }
+
+  .nav-links { display: flex; gap: 44px; list-style: none; }
+  .nav-links a {
+    color: rgba(234,242,251,0.65); text-decoration: none;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.78rem; letter-spacing: 0.25em; text-transform: uppercase; font-weight: 500;
+    position: relative; transition: color 0.3s;
+  }
+  .nav-links a::after {
+    content: ''; position: absolute; bottom: -5px; left: 0;
+    width: 0; height: 1px; background: var(--accent); transition: width 0.35s;
+  }
+  .nav-links a:hover { color: var(--accent); }
+  .nav-links a:hover::after { width: 100%; }
+
+  /* HERO */
+  .hero {
+    position: relative; height: 58vh; min-height: 400px;
+    display: flex; flex-direction: column; justify-content: center;
+    align-items: flex-start; padding: 0 64px; overflow: hidden;
+    margin-top: 60px;
+  }
+  .hero-bg {
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(ellipse 75% 65% at 72% 50%, rgba(30,127,190,0.09) 0%, transparent 65%),
+      linear-gradient(155deg, #03030a 0%, #060e1a 45%, #03030a 100%);
+  }
+  .hero-grid {
+    position: absolute; inset: 0; pointer-events: none;
+    background-image:
+      linear-gradient(rgba(30,127,190,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(30,127,190,0.03) 1px, transparent 1px);
+    background-size: 80px 80px;
+    mask-image: radial-gradient(ellipse 60% 60% at 50% 50%, black 20%, transparent 100%);
+  }
+
+  .hero-eyebrow {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.72rem; letter-spacing: 0.5em; text-transform: uppercase;
+    color: var(--accent); margin-bottom: 16px;
+    display: flex; align-items: center; gap: 16px;
+    animation: fadeUp 0.9s ease 0.3s both;
+  }
+  .hero-eyebrow::before { content: ''; display: block; width: 48px; height: 1px; background: linear-gradient(to right, transparent, var(--accent)); }
+  .hero-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(3rem, 8vw, 7rem); line-height: 0.9; letter-spacing: 0.03em;
+    animation: fadeUp 0.9s ease 0.5s both;
+  }
+  .hero-title .accent-txt { color: var(--accent); }
+  .hero-sub {
+    margin-top: 24px; font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.8rem; letter-spacing: 0.3em; text-transform: uppercase;
+    color: var(--muted); font-weight: 300;
+    animation: fadeUp 0.9s ease 0.7s both;
+  }
+
+  /* PORTFOLIO SECTION */
+  .portfolio-section { background: var(--dark); padding: 100px 64px; }
+
+  .section-eyebrow {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.68rem; letter-spacing: 0.45em; text-transform: uppercase;
+    color: var(--accent); margin-bottom: 12px;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .section-eyebrow::before { content: ''; display: block; width: 28px; height: 1px; background: var(--accent); }
+  .section-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(2.8rem, 5vw, 4.5rem); letter-spacing: 0.05em; line-height: 0.95; margin-bottom: 16px;
+  }
+  .section-rule { width: 64px; height: 2px; background: linear-gradient(to right, var(--blue), transparent); margin-bottom: 64px; }
+
+  .portfolio-grid { display: flex; flex-direction: column; gap: 72px; max-width: 900px; margin: 0 auto; }
+
+  /* Video containers */
+  .portfolio-item { display: flex; flex-direction: column; }
+
+  .item-label {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.62rem; letter-spacing: 0.4em; text-transform: uppercase;
+    color: var(--accent); margin-bottom: 14px;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .item-label::before { content: ''; width: 18px; height: 1px; background: var(--accent); }
+
+  .video-frame {
+    position: relative; width: 100%; background: #000; overflow: hidden;
+    border: 1px solid rgba(0,212,255,0.12);
+  }
+  .video-frame.r-16-9 { aspect-ratio: 16/9; }
+  .video-frame.r-9-16 { aspect-ratio: 9/16; max-width: 340px; margin: 0 auto; }
+  .video-frame.r-1-1  { aspect-ratio: 1/1;  max-width: 420px; margin: 0 auto; }
+
+  .video-frame.r-9-16 { clip-path: polygon(0 0, calc(100% - 16px) 0, 100% 16px, 100% 100%, 16px 100%, 0 calc(100% - 16px)); }
+  .video-frame.r-16-9 { clip-path: polygon(0 0, calc(100% - 20px) 0, 100% 20px, 100% 100%, 20px 100%, 0 calc(100% - 20px)); }
+  .video-frame.r-1-1  { clip-path: polygon(0 0, calc(100% - 18px) 0, 100% 18px, 100% 100%, 18px 100%, 0 calc(100% - 18px)); }
+
+  .video-frame video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+
+  .corner { position: absolute; width: 18px; height: 18px; z-index: 3; }
+  .corner-tl { top: -1px; left: -1px; border-top: 2px solid var(--accent); border-left: 2px solid var(--accent); }
+  .corner-tr { top: -1px; right: -1px; border-top: 2px solid var(--accent); border-right: 2px solid var(--accent); }
+  .corner-bl { bottom: -1px; left: -1px; border-bottom: 2px solid var(--accent); border-left: 2px solid var(--accent); }
+  .corner-br { bottom: -1px; right: -1px; border-bottom: 2px solid var(--accent); border-right: 2px solid var(--accent); }
+
+  .item-info { margin-top: 20px; }
+  .item-title {
+    font-family: 'Bebas Neue', sans-serif; font-size: 1.6rem;
+    letter-spacing: 0.1em; color: var(--white); margin-bottom: 6px;
+  }
+  .item-desc {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.7rem; color: var(--muted); letter-spacing: 0.2em; text-transform: uppercase;
+  }
+
+  /* CONTACT */
+  .contact-section {
+    background: var(--black); text-align: center;
+    padding: 120px 64px; position: relative; overflow: hidden;
+  }
+  .contact-bg-text {
+    position: absolute; font-family: 'Bebas Neue', sans-serif;
+    font-size: 22vw; color: rgba(0,212,255,0.018);
+    top: 50%; left: 50%; transform: translate(-50%,-50%);
+    letter-spacing: 0.1em; pointer-events: none; white-space: nowrap;
+  }
+  .contact-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(3rem, 6vw, 5.5rem); letter-spacing: 0.06em; line-height: 0.95;
+    margin-bottom: 20px; position: relative; z-index: 1;
+  }
+  .contact-sub {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.8rem; color: var(--muted); letter-spacing: 0.22em; text-transform: uppercase;
+    margin-bottom: 52px; font-weight: 300; position: relative; z-index: 1;
+  }
+  .contact-links { display: flex; justify-content: center; gap: 14px; flex-wrap: wrap; position: relative; z-index: 1; }
+  .contact-link {
+    padding: 15px 40px; border: 1px solid rgba(0,212,255,0.25); color: var(--white);
+    text-decoration: none; font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.73rem; letter-spacing: 0.28em; text-transform: uppercase; font-weight: 500;
+    cursor: none; transition: all 0.3s; display: flex; align-items: center; gap: 12px;
+    clip-path: polygon(12px 0, 100% 0, 100% 100%, 0 100%, 0 12px);
+  }
+  .contact-link:hover { border-color: var(--accent); color: var(--accent); background: rgba(0,212,255,0.05); transform: translateY(-2px); }
+
+  /* FOOTER */
+  footer {
+    background: var(--dark); padding: 36px 64px;
+    display: flex; justify-content: space-between; align-items: center;
+    border-top: 1px solid rgba(0,212,255,0.07);
+  }
+  .footer-logo { font-family: 'Bebas Neue', sans-serif; font-size: 1.4rem; letter-spacing: 0.2em; color: var(--accent); }
+  .footer-copy { font-family: 'Barlow Condensed', sans-serif; font-size: 0.6rem; color: var(--muted); letter-spacing: 0.22em; text-transform: uppercase; }
+  .footer-socials { display: flex; gap: 12px; }
+  .footer-social {
+    width: 36px; height: 36px; border: 1px solid rgba(0,212,255,0.18);
+    display: flex; align-items: center; justify-content: center;
+    color: var(--muted); text-decoration: none; cursor: none; transition: all 0.3s;
+    font-family: 'Barlow Condensed', sans-serif; font-size: 0.68rem; font-weight: 600;
+  }
+  .footer-social:hover { border-color: var(--accent); color: var(--accent); }
+
+  /* ANIMATIONS */
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(32px); } to { opacity: 1; transform: translateY(0); } }
+
+  .reveal { opacity: 0; transform: translateY(36px); transition: opacity 0.9s ease, transform 0.9s ease; }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+
+  @media (max-width: 900px) {
+    nav { padding: 16px 24px; }
+    .nav-links { display: none; }
+    .portfolio-section { padding: 80px 24px; }
+    .hero { padding: 0 24px; }
+    footer { flex-direction: column; gap: 16px; text-align: center; padding: 28px 24px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+<div class="scanline"></div>
+
+<!-- NAV -->
+<nav id="mainNav">
+  <a class="nav-logo" href="index.html">
+    <img class="nav-logo-img" src="logo1.png" alt="Musu Studio">
+    <span>MUSU <span class="accent">STUDIO</span></span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="index.html#work">Work</a></li>
+    <li><a href="index.html#about">About</a></li>
+    <li><a href="index.html#services">Services</a></li>
+    <li><a href="index.html#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-grid"></div>
+  <div class="hero-eyebrow">Portfolio Showcase</div>
+  <h1 class="hero-title">FULL<br><span class="accent-txt">PORTFOLIO</span></h1>
+  <p class="hero-sub">All Projects in One Place</p>
+</section>
+
+<!-- PORTFOLIO -->
+<section class="portfolio-section">
+  <div class="section-eyebrow reveal">Complete Works</div>
+  <h2 class="section-title reveal">MY WORKS</h2>
+  <div class="section-rule reveal"></div>
+
+  <div class="portfolio-grid">
+
+    <!-- Edit 1 — 9:16 -->
+    <div class="portfolio-item reveal">
+      <div class="item-label">Edit 01 · 9:16 · Vertical</div>
+      <div class="video-frame r-9-16">
+        <div class="corner corner-tl"></div>
+        <div class="corner corner-tr"></div>
+        <div class="corner corner-bl"></div>
+        <div class="corner corner-br"></div>
+        <video src="https://r2.fivemanage.com/kuMnTOqVNyIBnzhp4r8gG/musumotivationportfolio.mp4" controls playsinline></video>
+      </div>
+      <div class="item-info">
+        <div class="item-title">Motivation Edit</div>
+        <div class="item-desc">Text · Color Grade · Motivation</div>
+      </div>
+    </div>
+
+    <!-- Edit 2 — 9:16 -->
+    <div class="portfolio-item reveal">
+      <div class="item-label">Edit 02 · 9:16 · Vertical</div>
+      <div class="video-frame r-9-16">
+        <div class="corner corner-tl"></div>
+        <div class="corner corner-tr"></div>
+        <div class="corner corner-bl"></div>
+        <div class="corner corner-br"></div>
+        <video src="https://r2.fivemanage.com/IovDyfYx3bXgUDf6BcbEZ/MUSUPORTFOLIO3RD.mp4" controls playsinline></video>
+      </div>
+      <div class="item-info">
+        <div class="item-title">Podcast Edit</div>
+        <div class="item-desc">Motivation · Sound Design · Grading</div>
+      </div>
+    </div>
+
+    <!-- Edit 3 — 1:1 -->
+    <div class="portfolio-item reveal">
+      <div class="item-label">Edit 03 · 1:1 · Square</div>
+      <div class="video-frame r-1-1">
+        <div class="corner corner-tl"></div>
+        <div class="corner corner-tr"></div>
+        <div class="corner corner-bl"></div>
+        <div class="corner corner-br"></div>
+        <video src="https://r2.fivemanage.com/IovDyfYx3bXgUDf6BcbEZ/Blinkitanimationbymusu.mp4" controls playsinline></video>
+      </div>
+      <div class="item-info">
+        <div class="item-title">Blinkit Saans Animation</div>
+        <div class="item-desc">SFX · Smooth · Map Transitions</div>
+      </div>
+    </div>
+
+    <!-- Edit 4 — 9:16 -->
+    <div class="portfolio-item reveal">
+      <div class="item-label">Edit 04 · 9:16 · Vertical</div>
+      <div class="video-frame r-9-16">
+        <div class="corner corner-tl"></div>
+        <div class="corner corner-tr"></div>
+        <div class="corner corner-bl"></div>
+        <div class="corner corner-br"></div>
+        <video src="https://r2.fivemanage.com/IovDyfYx3bXgUDf6BcbEZ/2vid.mp4" controls playsinline></video>
+      </div>
+      <div class="item-info">
+        <div class="item-title">Client Work</div>
+        <div class="item-desc">SFX · Smooth · Text Effects</div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section class="contact-section" id="contact">
+  <div class="contact-bg-text">CONNECT</div>
+  <div class="section-eyebrow reveal" style="justify-content:center;">Ready to Collaborate</div>
+  <h2 class="contact-title reveal">INTERESTED?<br><span style="color:var(--accent);">LET'S TALK</span></h2>
+  <p class="contact-sub reveal">Reach out for your next project</p>
+  <div class="contact-links reveal">
+    <a href="mailto:mmusuefx@gmail.com" class="contact-link">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+      Email Me
+    </a>
+    <a href="https://www.instagram.com/musuefx?igsh=MTZwaHdiM2swYjI3" class="contact-link" target="_blank">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+      Instagram
+    </a>
+    <a href="https://youtube.com/@musu_efx?si=UdZ1TyqsI4a-cDTM" class="contact-link" target="_blank">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46A2.78 2.78 0 0 0 1.46 6.42 29 29 0 0 0 1 12a29 29 0 0 0 .46 5.58 2.78 2.78 0 0 0 1.95 1.95C5.12 20 12 20 12 20s6.88 0 8.59-.47a2.78 2.78 0 0 0 1.95-1.95A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58z"/><polygon points="9.75,15.02 15.5,12 9.75,8.98"/></svg>
+      YouTube
+    </a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">MUSU STUDIO</div>
+  <div>
+    <div class="footer-copy">© 2026 MUSU STUDIO — All Rights Reserved</div>
+    <div class="footer-copy" style="margin-top:4px;">Developed By Sarkaar</div>
+  </div>
+  <div class="footer-socials">
+    <a class="footer-social" href="https://www.instagram.com/musuefx?igsh=MTZwaHdiM2swYjI3" target="_blank">IG</a>
+    <a class="footer-social" href="https://youtube.com/@musu_efx?si=UdZ1TyqsI4a-cDTM" target="_blank">YT</a>
+  </div>
+</footer>
+
+<script>
+  const cursor = document.getElementById('cursor');
+  const ring = document.getElementById('cursorRing');
+  let mx=0,my=0,rx=0,ry=0;
+  document.addEventListener('mousemove', e => { mx=e.clientX; my=e.clientY; });
+  function animCursor() {
+    cursor.style.left=mx+'px'; cursor.style.top=my+'px';
+    rx+=(mx-rx)*0.11; ry+=(my-ry)*0.11;
+    ring.style.left=rx+'px'; ring.style.top=ry+'px';
+    requestAnimationFrame(animCursor);
+  }
+  animCursor();
+
+  document.querySelectorAll('a, .portfolio-item').forEach(el => {
+    el.addEventListener('mouseenter', () => { cursor.style.width='14px'; cursor.style.height='14px'; ring.style.width='56px'; ring.style.height='56px'; });
+    el.addEventListener('mouseleave', () => { cursor.style.width='8px'; cursor.style.height='8px'; ring.style.width='40px'; ring.style.height='40px'; });
+  });
+
+  const nav = document.getElementById('mainNav');
+  window.addEventListener('scroll', () => nav.classList.toggle('scrolled', window.scrollY>60));
+
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach((e,i) => { if(e.isIntersecting) { setTimeout(()=>e.target.classList.add('visible'),i*80); obs.unobserve(e.target); } });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+</script>
+</body>
+</html>
